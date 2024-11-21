@@ -21,3 +21,22 @@ class ProductPage(BasePage):
             alert.accept()
         except NoAlertPresentException:
             print("No second alert presented")
+
+    def check_name_add_in_basket(self):
+        self.should_be_basket_and_product_same_name()
+        self.should_be_basket_and_product_same_price()
+
+    def should_be_basket_and_product_same_name(self):
+        # Проверка того, что товар добавлен в корзину. Название товара в сообщении должно совпадать с тем товаром,
+        # который добавили
+        product_name_page = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME_PAGE).text
+        product_name_basket = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME_BASKET).text
+        assert product_name_basket == product_name_page, \
+            f"Product names in page and basket are not the same! {product_name_page} != {product_name_basket}"
+
+    def should_be_basket_and_product_same_price(self):
+        # Проверка стоимости в корзине. Стоимость в корзине должна совпадать с ценой товара
+        product_price = self.browser.find_element(*ProductPageLocators.PRODUCT_PRICE).text[1:]
+        basket_price = self.browser.find_element(*ProductPageLocators.BASKET_PRICE).text[1:]
+        assert product_price == basket_price, \
+            f"Product prices in page and basket are not the same! {product_price} != {basket_price}"
